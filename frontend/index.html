@@ -84,91 +84,57 @@
     .hero-social { display: flex; align-items: center; gap: 7px; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.25s; }
     .hero-social:hover { color: var(--text); }
 
-    /* Profile photo — right side of hero */
-    .hero-photo-col { position: relative; z-index: 2; display: flex; justify-content: center; }
+    /* Profile photo — floating card */
+    .hero-photo-col { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; }
 
-    /* Outer card — like a dark space-themed photo card */
+    @keyframes floatCard {
+      0%   { transform: rotate(1.5deg) translate(0px, 0px); }
+      25%  { transform: rotate(2.2deg) translate(7px, -10px); }
+      50%  { transform: rotate(0.8deg) translate(12px, -18px); }
+      75%  { transform: rotate(2deg)   translate(5px, -8px); }
+      100% { transform: rotate(1.5deg) translate(0px, 0px); }
+    }
+    @keyframes flyAway {
+      0%   { transform: rotate(1.5deg) translate(0,0) scale(1); opacity:1; }
+      40%  { transform: rotate(25deg) translate(140px,-160px) scale(0.85); opacity:0.7; }
+      100% { transform: rotate(45deg) translate(320px,-400px) scale(0.4); opacity:0; }
+    }
+    @keyframes flyBack {
+      0%   { transform: rotate(45deg) translate(320px,-400px) scale(0.4); opacity:0; }
+      60%  { transform: rotate(-1deg) translate(-8px,10px) scale(1.04); opacity:1; }
+      100% { transform: rotate(1.5deg) translate(0,0) scale(1); opacity:1; }
+    }
+    @keyframes hintPulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
     .hero-photo-card {
       position: relative;
-      background: rgba(8, 3, 18, 0.85);
+      background: rgba(8,3,18,0.88);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 4px;
       padding: 14px 14px 52px 14px;
-      box-shadow:
-        0 0 0 1px rgba(180,25,40,0.12),
-        0 24px 60px rgba(0,0,0,0.7),
-        0 4px 16px rgba(180,25,40,0.08);
+      box-shadow: 0 0 0 1px rgba(180,25,40,0.12), 0 28px 64px rgba(0,0,0,0.75), 0 4px 18px rgba(180,25,40,0.1);
       backdrop-filter: blur(12px);
-      transform: rotate(1.5deg);
-      transition: transform 0.4s ease;
       max-width: 320px; width: 100%;
+      cursor: pointer;
+      animation: floatCard 6s ease-in-out infinite;
+      user-select: none;
     }
-    .hero-photo-card:hover { transform: rotate(0deg) scale(1.02); }
-
-    /* Red corner accents like photo corners */
-    .hero-photo-card::before,
-    .hero-photo-card::after {
-      content: '';
-      position: absolute;
-      width: 16px; height: 16px;
-      border-color: var(--red);
-      border-style: solid;
-      opacity: 0.5;
+    .hero-photo-card.flying { animation: flyAway 0.65s cubic-bezier(0.4,0,0.2,1) forwards; }
+    .hero-photo-card.returning { animation: flyBack 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+    .hero-photo-card:not(.flying):not(.returning):hover {
+      animation-play-state: paused;
+      box-shadow: 0 0 0 1px rgba(180,25,40,0.25), 0 32px 72px rgba(0,0,0,0.8), 0 6px 24px rgba(180,25,40,0.15);
     }
-    .hero-photo-card::before {
-      top: 6px; left: 6px;
-      border-width: 1.5px 0 0 1.5px;
-    }
-    .hero-photo-card::after {
-      bottom: 38px; right: 6px;
-      border-width: 0 1.5px 1.5px 0;
-    }
-
-    /* The actual photo inside the card */
-    .hero-photo-frame {
-      width: 100%; aspect-ratio: 3/4;
-      overflow: hidden;
-      border-radius: 2px;
-    }
-    .hero-photo-bg {
-      width: 100%; height: 100%; min-height: 340px;
-      background-image: url('profile.jpg');
-      background-size: cover;
-      background-position: center top;
-      filter: contrast(1.05) saturate(0.9);
-    }
-
-    /* Caption area at the bottom of the card */
-    .hero-photo-caption {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 48px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 0 14px;
-    }
-    .hero-photo-caption span {
-      font-family: 'Cinzel', serif;
-      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
-    }
-    .hero-photo-caption .cap-dot {
-      width: 3px; height: 3px; border-radius: 50%;
-      background: var(--red); opacity: 0.6; letter-spacing: 0;
-    }
-
-    /* Subtle scanline texture on photo */
-    .hero-photo-frame::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.03) 2px,
-        rgba(0,0,0,0.03) 4px
-      );
-      pointer-events: none;
-    }
+    .hero-photo-card::before, .hero-photo-card::after { content:''; position:absolute; width:16px; height:16px; border-color:var(--red); border-style:solid; opacity:0.5; }
+    .hero-photo-card::before { top:6px; left:6px; border-width:1.5px 0 0 1.5px; }
+    .hero-photo-card::after  { bottom:38px; right:6px; border-width:0 1.5px 1.5px 0; }
+    .click-hint { position:absolute; top:-26px; left:50%; transform:translateX(-50%); font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(200,32,46,0.55); white-space:nowrap; animation:hintPulse 2.5s ease-in-out infinite; pointer-events:none; }
+    .hero-photo-frame { width:100%; aspect-ratio:3/4; overflow:hidden; border-radius:2px; position:relative; }
+    .hero-photo-bg { width:100%; height:100%; min-height:340px; background-image:url('profile.jpg'); background-size:cover; background-position:center top; filter:contrast(1.05) saturate(0.9); }
+    .hero-photo-frame::after { content:''; position:absolute; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px); pointer-events:none; }
+    .hero-photo-caption { position:absolute; bottom:0; left:0; right:0; height:48px; display:flex; align-items:center; justify-content:center; gap:8px; padding:0 14px; }
+    .hero-photo-caption span { font-family:'Cinzel',serif; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:rgba(255,255,255,0.35); }
+    .hero-photo-caption .cap-dot { width:3px; height:3px; border-radius:50%; background:var(--red); opacity:0.6; }
 
     /* ── ABOUT — no photo, just text + skills ── */
     .about-body { font-family: 'Crimson Pro', serif; font-size: 1.1rem; color: var(--muted); margin-bottom: 16px; line-height: 1.9; }
@@ -344,7 +310,8 @@
           </div>
         </div>
         <div class="hero-photo-col">
-          <div class="hero-photo-card">
+          <div class="hero-photo-card" id="photoCard" onclick="flyPhoto()">
+            <span class="click-hint">click me ✦</span>
             <div class="hero-photo-frame">
               <div class="hero-photo-bg"></div>
             </div>
@@ -579,6 +546,33 @@
     finally { btn.disabled=false; btn.textContent='Send Message' }
   }
   loadComments()
+
+  /* ── PHOTO FLY AWAY ── */
+  let photoFlying = false
+  function flyPhoto() {
+    if (photoFlying) return
+    const card = document.getElementById('photoCard')
+    photoFlying = true
+
+    // Remove float, add fly class
+    card.classList.add('flying')
+
+    // After fly-away finishes, wait a beat then fly back
+    card.addEventListener('animationend', function onEnd() {
+      card.removeEventListener('animationend', onEnd)
+      setTimeout(() => {
+        card.classList.remove('flying')
+        card.classList.add('returning')
+        card.addEventListener('animationend', function onBack() {
+          card.removeEventListener('animationend', onBack)
+          card.classList.remove('returning')
+          // Resume float
+          photoFlying = false
+        }, { once: true })
+      }, 320)
+    }, { once: true })
+  }
+
 </script>
 </body>
 </html>
