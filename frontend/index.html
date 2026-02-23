@@ -19,7 +19,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; line-height: 1.7; overflow-x: hidden; }
-
     canvas#galaxy { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
     .page { position: relative; z-index: 1; }
 
@@ -74,7 +73,6 @@
 
     /* ── PHOTO CARD ── */
     .hero-photo-col { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; }
-
     @keyframes floatCard {
       0%   { transform: rotate(1.5deg) translate(0px, 0px); }
       25%  { transform: rotate(2.2deg) translate(7px, -10px); }
@@ -93,7 +91,6 @@
       100% { transform: rotate(1.5deg) translate(0,0) scale(1); opacity:1; }
     }
     @keyframes hintPulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
-
     .hero-photo-card {
       position: relative;
       background: rgba(8,3,18,0.88);
@@ -156,6 +153,15 @@
     .exp-title { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 400; color: var(--text); }
     .exp-desc { font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--muted); line-height: 1.8; }
 
+    /* ── INTERESTS ── */
+    .interests-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-bottom: 52px; }
+    .interest-card { display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden; }
+    .interest-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--red), transparent); opacity: 0; transition: opacity 0.3s; }
+    .interest-card:hover::before { opacity: 1; }
+    .interest-icon { font-size: 2.2rem; }
+    .interest-title { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 400; color: var(--text); letter-spacing: 0.04em; }
+    .interest-desc { font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--muted); line-height: 1.8; }
+
     /* ── GOALS ── */
     .goals-list { margin-bottom: 44px; }
     .goal-row { display: flex; align-items: baseline; gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--border); }
@@ -163,6 +169,85 @@
     .goal-num { font-family: 'Cinzel', serif; font-size: 0.9rem; color: var(--red); flex-shrink: 0; width: 28px; }
     .goal-text { font-family: 'Crimson Pro', serif; font-size: 1.05rem; color: var(--muted); line-height: 1.8; }
     .big-quote { font-family: 'Cinzel', serif; font-size: clamp(0.9rem, 2vw, 1.25rem); font-weight: 400; font-style: italic; color: var(--muted); text-align: center; max-width: 720px; margin: 0 auto; line-height: 1.75; }
+
+    /* ── GALLERY ── */
+    #gallery { padding: 52px 0; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 12px;
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(10,5,18,0.72);
+      cursor: pointer;
+      aspect-ratio: 1 / 1;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .gallery-item:first-child {
+      grid-column: span 2;
+      aspect-ratio: 16 / 9;
+    }
+    .gallery-item:hover { border-color: rgba(180,25,40,0.4); transform: scale(1.01); }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: contrast(1.05) saturate(0.85);
+      transition: filter 0.4s, transform 0.4s;
+    }
+    .gallery-item:hover img { filter: contrast(1.1) saturate(1); transform: scale(1.04); }
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px);
+      pointer-events: none;
+    }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+      transition: background 0.3s;
+    }
+    .gallery-item:hover .gallery-overlay { background: rgba(0,0,0,0.4); }
+    .gallery-label {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0);
+      transition: color 0.3s;
+    }
+    .gallery-item:hover .gallery-label { color: rgba(255,255,255,0.6); }
+
+    /* Gallery placeholder (before real images added) */
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--muted);
+    }
+    .gallery-placeholder svg { opacity: 0.3; }
+    .gallery-placeholder span { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.4; }
+
+    /* Lightbox */
+    .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+    .lightbox.active { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 4px; border: 1px solid var(--border); }
+    .lightbox-close { position: absolute; top: 24px; right: 32px; background: none; border: none; color: var(--muted); font-size: 28px; cursor: pointer; transition: color 0.2s; line-height: 1; }
+    .lightbox-close:hover { color: var(--text); }
 
     /* ── GUESTBOOK ── */
     .gb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
@@ -192,22 +277,6 @@
     .gb-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
     .gb-msg { font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--muted); line-height: 1.8; }
 
-    /* ── GAME ── */
-    #game { padding: 52px 0; }
-    .game-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-    .game-hud { display: flex; align-items: center; gap: 36px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); flex-wrap: wrap; justify-content: center; }
-    .game-hud span { display: flex; align-items: center; gap: 8px; }
-    .game-hud strong { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--text); }
-    /* FIX 1: was `background: transparent` — game was invisible */
-    #gameCanvas { border: 1px solid var(--border); border-radius: 10px; background: #00000a; display: block; cursor: crosshair; max-width: 100%; }
-    .game-controls { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-    .game-btn { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; padding: 10px 24px; border-radius: 6px; cursor: pointer; transition: all 0.25s; border: none; }
-    .game-btn-primary { background: var(--red); color: #fff; }
-    .game-btn-primary:hover { background: #a8131f; transform: translateY(-2px); }
-    .game-btn-secondary { background: transparent; color: var(--muted); border: 1px solid var(--border); }
-    .game-btn-secondary:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-    .game-hint { font-size: 10px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; text-align: center; }
-
     /* ── FOOTER ── */
     footer { border-top: 1px solid var(--border); padding: 44px 40px; text-align: center; }
     .footer-logo { font-family: 'Cinzel', serif; font-size: 1.6rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
@@ -222,7 +291,6 @@
     /* ── ANIMATIONS ── */
     @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes scrollLine { 0%,100% { opacity:1; transform:scaleY(1); } 50% { opacity:0.3; transform:scaleY(0.5); } }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
@@ -233,6 +301,8 @@
       .hero-name { font-size: clamp(2.8rem, 10vw, 4.5rem); }
       .about-cols { grid-template-columns: 1fr; gap: 0; }
       .gb-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item:first-child { grid-column: span 2; }
     }
     @media (max-width: 768px) {
       section { padding: 44px 0; }
@@ -244,8 +314,11 @@
       .mobile-menu { display: flex; }
       .projects-grid { grid-template-columns: 1fr; }
       .exp-grid { grid-template-columns: 1fr; }
+      .interests-grid { grid-template-columns: 1fr; }
       footer { padding: 40px 20px; }
       #hero { padding: 80px 20px 48px; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item:first-child { grid-column: span 1; aspect-ratio: 16/9; }
     }
     @media (max-width: 480px) {
       .card { padding: 22px 18px; }
@@ -266,8 +339,9 @@
         <li><a href="#projects">Projects</a></li>
         <li><a href="#education">Education</a></li>
         <li><a href="#experience">Experience</a></li>
+        <li><a href="#interests">Interests</a></li>
+        <li><a href="#gallery">Gallery</a></li>
         <li><a href="#goals">Goals</a></li>
-        <li><a href="#game">Game</a></li>
         <li><a href="#guestbook">Guestbook</a></li>
       </ul>
       <div class="nav-socials">
@@ -282,8 +356,9 @@
       <a href="#projects" onclick="closeMenu()">Projects</a>
       <a href="#education" onclick="closeMenu()">Education</a>
       <a href="#experience" onclick="closeMenu()">Experience</a>
+      <a href="#interests" onclick="closeMenu()">Interests</a>
+      <a href="#gallery" onclick="closeMenu()">Gallery</a>
       <a href="#goals" onclick="closeMenu()">Goals</a>
-      <a href="#game" onclick="closeMenu()">Game</a>
       <a href="#guestbook" onclick="closeMenu()">Guestbook</a>
       <div class="mobile-socials">
         <a href="https://github.com/apcrntura" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
@@ -403,16 +478,77 @@
       </div>
     </section>
 
+    <!-- INTERESTS -->
+    <section id="interests">
+      <div class="container">
+        <p class="section-label">05 — Interests</p>
+        <h2 class="section-title">What I'm Into</h2>
+        <div class="interests-grid">
+          <div class="card interest-card">
+            <span class="interest-icon">🚗</span>
+            <h3 class="interest-title">Car Meet Culture</h3>
+            <p class="interest-desc">There's something about a well-lit parking lot, a good sound system, and a crowd of car enthusiasts that just hits different. I love joining local car meets — checking out builds, talking specs, and soaking in the community vibe.</p>
+          </div>
+          <div class="card interest-card">
+            <span class="interest-icon">🎮</span>
+            <h3 class="interest-title">MOBA Gaming</h3>
+            <p class="interest-desc">Strategy, teamwork, quick decision-making under pressure — MOBA games scratch the same itch as complex system design. Whether it's climbing ranks or grinding with friends, it's always a good time.</p>
+          </div>
+          <div class="card interest-card">
+            <span class="interest-icon">🗄️</span>
+            <h3 class="interest-title">Database Architecture</h3>
+            <p class="interest-desc">I genuinely enjoy the art of structuring data — normalized schemas, indexing strategies, query optimization. There's an elegance to a well-designed database that I find deeply satisfying.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery">
+      <div class="container">
+        <p class="section-label">06 — Gallery</p>
+        <h2 class="section-title">Moments & Memories</h2>
+        <div class="gallery-grid" id="galleryGrid">
+          <!-- Photo 1 — featured (wide) -->
+          <div class="gallery-item" onclick="openLightbox('photo1.jpg')">
+            <img src="photo1.jpg" alt="Gallery photo 1" onerror="this.parentElement.innerHTML=placeholderHTML('Photo 1')" />
+            <div class="gallery-overlay"><span class="gallery-label">Photo 01</span></div>
+          </div>
+          <!-- Photo 2 -->
+          <div class="gallery-item" onclick="openLightbox('photo2.jpg')">
+            <img src="photo2.jpg" alt="Gallery photo 2" onerror="this.parentElement.innerHTML=placeholderHTML('Photo 2')" />
+            <div class="gallery-overlay"><span class="gallery-label">Photo 02</span></div>
+          </div>
+          <!-- Photo 3 -->
+          <div class="gallery-item" onclick="openLightbox('photo3.jpg')">
+            <img src="photo3.jpg" alt="Gallery photo 3" onerror="this.parentElement.innerHTML=placeholderHTML('Photo 3')" />
+            <div class="gallery-overlay"><span class="gallery-label">Photo 03</span></div>
+          </div>
+          <!-- Photo 4 -->
+          <div class="gallery-item" onclick="openLightbox('photo4.jpg')">
+            <img src="photo4.jpg" alt="Gallery photo 4" onerror="this.parentElement.innerHTML=placeholderHTML('Photo 4')" />
+            <div class="gallery-overlay"><span class="gallery-label">Photo 04</span></div>
+          </div>
+          <!-- Photo 5 (optional — remove if only 4 photos) -->
+          <div class="gallery-item" onclick="openLightbox('photo5.jpg')">
+            <img src="photo5.jpg" alt="Gallery photo 5" onerror="this.parentElement.innerHTML=placeholderHTML('Photo 5')" />
+            <div class="gallery-overlay"><span class="gallery-label">Photo 05</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- GOALS -->
     <section id="goals">
       <div class="container">
-        <p class="section-label">05 — Goals</p>
+        <p class="section-label">07 — Goals</p>
         <h2 class="section-title">Where I'm Headed</h2>
         <div class="goals-list">
-          <div class="goal-row"><span class="goal-num">01</span><p class="goal-text">Master full-stack development with modern frameworks and cloud infrastructure.</p></div>
-          <div class="goal-row"><span class="goal-num">02</span><p class="goal-text">Contribute to open-source projects and build a portfolio with real-world impact.</p></div>
-          <div class="goal-row"><span class="goal-num">03</span><p class="goal-text">Deepen expertise in backend systems, database architecture, and DevOps pipelines.</p></div>
-          <div class="goal-row"><span class="goal-num">04</span><p class="goal-text">Build technology that genuinely solves problems for real people.</p></div>
+          <div class="goal-row"><span class="goal-num">01</span><p class="goal-text">Travel around the world — explore different cultures, cuisines, and landscapes one country at a time.</p></div>
+          <div class="goal-row"><span class="goal-num">02</span><p class="goal-text">Drive my dream car — because some goals are meant to be felt, not just achieved.</p></div>
+          <div class="goal-row"><span class="goal-num">03</span><p class="goal-text">Master full-stack development with modern frameworks and cloud infrastructure.</p></div>
+          <div class="goal-row"><span class="goal-num">04</span><p class="goal-text">Deepen expertise in backend systems, database architecture, and DevOps pipelines.</p></div>
+          <div class="goal-row"><span class="goal-num">05</span><p class="goal-text">Build technology that genuinely solves problems for real people.</p></div>
         </div>
         <p class="big-quote">"To grow as a disciplined IT professional and create meaningful technology solutions that make a difference."</p>
       </div>
@@ -421,7 +557,7 @@
     <!-- GUESTBOOK -->
     <section id="guestbook">
       <div class="container">
-        <p class="section-label">06 — Guestbook</p>
+        <p class="section-label">08 — Guestbook</p>
         <h2 class="section-title">Leave a Message</h2>
         <div class="gb-grid">
           <div class="card">
@@ -444,30 +580,13 @@
         </div>
       </div>
     </section>
-
-    <!-- GAME -->
-    <section id="game">
-      <div class="container">
-        <p class="section-label">07 — Mini Game</p>
-        <h2 class="section-title">Space Defender</h2>
-        <div class="game-wrap">
-          <div class="game-hud">
-            <span>Score <strong id="gScore">0</strong></span>
-            <span>Lives <strong id="gLives">3</strong></span>
-            <span>Level <strong id="gLevel">1</strong></span>
-            <span>Hi-Score <strong id="gHi">0</strong></span>
-          </div>
-          <canvas id="gameCanvas" width="720" height="420"></canvas>
-          <div class="game-controls">
-            <button class="game-btn game-btn-primary" id="gStartBtn" onclick="gameStart()">Start Game</button>
-            <button class="game-btn game-btn-secondary" onclick="gamePause()">Pause</button>
-          </div>
-          <p class="game-hint">← → Arrow keys or A/D to move &nbsp;·&nbsp; Spacebar or click to shoot &nbsp;·&nbsp; Survive the asteroid field</p>
-        </div>
-      </div>
-    </section>
-
   </main>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <img id="lightboxImg" src="" alt="Gallery photo" onclick="event.stopPropagation()" />
+  </div>
 
   <!-- FOOTER -->
   <footer>
@@ -487,7 +606,6 @@
   const canvas = document.getElementById('galaxy')
   const ctx = canvas.getContext('2d')
   let W, H, stars = [], shooting = [], frame = 0
-
   function resize() {
     W = canvas.width = window.innerWidth
     H = canvas.height = window.innerHeight
@@ -496,7 +614,6 @@
       return { x: Math.random()*W, y: Math.random()*H, r: 0.2+d*1.5, a: 0.25+d*0.75, sp: 0.06+d*0.42, tw: Math.random()*Math.PI*2, ts: 0.01+Math.random()*0.04 }
     })
   }
-
   function drawGalaxy() {
     frame++
     const bg = ctx.createLinearGradient(0,0,0,H)
@@ -530,6 +647,27 @@
   window.addEventListener('scroll',()=>{ document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50) })
   function toggleMenu(){ document.getElementById('mobileMenu').classList.toggle('open'); document.getElementById('hamburger').classList.toggle('open') }
   function closeMenu(){ document.getElementById('mobileMenu').classList.remove('open'); document.getElementById('hamburger').classList.remove('open') }
+
+  /* ── GALLERY ── */
+  function placeholderHTML(label) {
+    return `<div class="gallery-placeholder">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+      <span>${label}</span>
+    </div>`
+  }
+
+  function openLightbox(src) {
+    const lb = document.getElementById('lightbox')
+    const img = document.getElementById('lightboxImg')
+    img.src = src
+    lb.classList.add('active')
+    document.body.style.overflow = 'hidden'
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active')
+    document.body.style.overflow = ''
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox() })
 
   /* ── GUESTBOOK ── */
   const API = 'https://personal-website-finals-zpxq.onrender.com'
@@ -572,307 +710,15 @@
   }
   loadComments()
 
-  /* ══════════════════════════════════════
-     SPACE DEFENDER — ASTEROID SHOOTER
-  ══════════════════════════════════════ */
-  ;(function() {
-    const gc   = document.getElementById('gameCanvas')
-    const gctx = gc.getContext('2d')
-
-    function resizeGame() {
-      const maxW = Math.min(720, gc.parentElement.clientWidth - 40)
-      gc.style.width  = maxW + 'px'
-      gc.style.height = (maxW * 420/720) + 'px'
-    }
-    resizeGame()
-    window.addEventListener('resize', resizeGame)
-
-    const W = 720, H = 420
-    let state = 'idle'
-    let score = 0, lives = 3, level = 1, hiScore = 0
-    let raf = null
-
-    const ship = { x: W/2, y: H - 55, w: 28, h: 32, speed: 5, invincible: 0 }
-    const keys = {}
-
-    let bullets = [], asteroids = [], particles = [], stars2 = []
-    let shootCooldown = 0
-
-    for (let i = 0; i < 80; i++) {
-      stars2.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.2+0.2, sp: Math.random()*0.4+0.1, a: Math.random()*0.5+0.2 })
-    }
-
-    function spawnAsteroid() {
-      const sz = 18 + Math.random() * (24 + level * 3)
-      const x  = sz + Math.random() * (W - sz*2)
-      const spd = 0.7 + Math.random() * (0.8 + level * 0.18)
-      const pts = Math.floor(Math.random()*6)+6
-      const verts = []
-      for (let i = 0; i < pts; i++) {
-        const a = (i / pts) * Math.PI * 2
-        const r = sz * (0.72 + Math.random() * 0.38)
-        verts.push({ x: Math.cos(a)*r, y: Math.sin(a)*r })
-      }
-      asteroids.push({ x, y: -sz, vx: (Math.random()-0.5)*1.4, vy: spd, sz, rot: 0, rotSpd: (Math.random()-0.5)*0.04, verts, hp: sz > 32 ? 2 : 1, maxHp: sz > 32 ? 2 : 1, dead: false })
-    }
-
-    function spawnParticles(x, y, color, n) {
-      for (let i = 0; i < n; i++) {
-        const a = Math.random() * Math.PI * 2
-        const spd = 1 + Math.random() * 3
-        particles.push({ x, y, vx: Math.cos(a)*spd, vy: Math.sin(a)*spd, life: 1, decay: 0.025+Math.random()*0.04, r: 2+Math.random()*3, color })
-      }
-    }
-
-    function drawShip(x, y, alpha) {
-      gctx.save()
-      gctx.globalAlpha = alpha
-      gctx.translate(x, y)
-      gctx.beginPath()
-      gctx.moveTo(0, -ship.h/2)
-      gctx.lineTo(ship.w/2, ship.h/2)
-      gctx.lineTo(ship.w/4, ship.h/3)
-      gctx.lineTo(-ship.w/4, ship.h/3)
-      gctx.lineTo(-ship.w/2, ship.h/2)
-      gctx.closePath()
-      gctx.strokeStyle = '#ede8f0'; gctx.lineWidth = 1.5; gctx.stroke()
-      gctx.beginPath()
-      gctx.moveTo(0, -ship.h/4)
-      gctx.lineTo(ship.w/5, ship.h/6)
-      gctx.lineTo(-ship.w/5, ship.h/6)
-      gctx.closePath()
-      gctx.strokeStyle = 'rgba(200,32,46,0.8)'; gctx.lineWidth = 1; gctx.stroke()
-      if (keys['ArrowLeft'] || keys['a'] || keys['ArrowRight'] || keys['d']) {
-        gctx.beginPath(); gctx.arc(0, ship.h/2, 4, 0, Math.PI*2)
-        gctx.fillStyle = 'rgba(200,32,46,0.7)'; gctx.fill()
-      }
-      gctx.restore()
-    }
-
-    function drawAsteroid(a) {
-      gctx.save()
-      gctx.translate(a.x, a.y); gctx.rotate(a.rot)
-      gctx.beginPath()
-      gctx.moveTo(a.verts[0].x, a.verts[0].y)
-      for (let i = 1; i < a.verts.length; i++) gctx.lineTo(a.verts[i].x, a.verts[i].y)
-      gctx.closePath()
-      const dmg = 1 - (a.hp / a.maxHp)
-      gctx.strokeStyle = dmg > 0 ? 'rgba(200,32,46,0.9)' : 'rgba(200,195,220,0.75)'
-      gctx.lineWidth = 1.5; gctx.stroke()
-      gctx.fillStyle = dmg > 0 ? 'rgba(80,10,20,0.3)' : 'rgba(20,10,35,0.4)'; gctx.fill()
-      gctx.restore()
-    }
-
-    let asteroidTimer = 0
-
-    function gameLoop() {
-      if (state !== 'playing') return
-      raf = requestAnimationFrame(gameLoop)
-
-      gctx.clearRect(0, 0, W, H)
-
-      stars2.forEach(s => {
-        s.y += s.sp
-        if (s.y > H) { s.y = 0; s.x = Math.random()*W }
-        gctx.beginPath(); gctx.arc(s.x, s.y, s.r, 0, Math.PI*2)
-        gctx.fillStyle = `rgba(200,195,255,${s.a})`; gctx.fill()
-      })
-
-      if ((keys['ArrowLeft'] || keys['a']) && ship.x - ship.w/2 > 0) ship.x -= ship.speed
-      if ((keys['ArrowRight'] || keys['d']) && ship.x + ship.w/2 < W) ship.x += ship.speed
-      if (ship.invincible > 0) ship.invincible--
-
-      if (shootCooldown > 0) shootCooldown--
-      if ((keys[' '] || keys['Space']) && shootCooldown === 0) {
-        bullets.push({ x: ship.x, y: ship.y - ship.h/2, vy: -9 })
-        spawnParticles(ship.x, ship.y - ship.h/2, '#c8202e', 3)
-        shootCooldown = 12
-      }
-
-      bullets.forEach(b => { b.y += b.vy })
-      bullets = bullets.filter(b => b.y > -10)
-      bullets.forEach(b => {
-        gctx.beginPath(); gctx.arc(b.x, b.y, 3, 0, Math.PI*2)
-        gctx.fillStyle = '#c8202e'; gctx.fill()
-        gctx.beginPath(); gctx.arc(b.x, b.y+5, 2, 0, Math.PI*2)
-        gctx.fillStyle = 'rgba(200,32,46,0.35)'; gctx.fill()
-      })
-
-      asteroidTimer++
-      const asteroidInterval = Math.max(30, 120 - level * 10)
-      if (asteroidTimer >= asteroidInterval) { spawnAsteroid(); asteroidTimer = 0 }
-
-      asteroids.forEach(a => { a.x += a.vx; a.y += a.vy; a.rot += a.rotSpd })
-
-      /* ── COLLISION — safe: flag sets, no splice inside forEach ── */
-      const hitBullets = new Set()
-      let playerDied = false
-
-      for (const a of asteroids) {
-        if (a.dead) continue
-        for (let bi = 0; bi < bullets.length; bi++) {
-          if (hitBullets.has(bi)) continue
-          const dx = bullets[bi].x - a.x, dy = bullets[bi].y - a.y
-          if (dx*dx + dy*dy < a.sz*a.sz) {
-            hitBullets.add(bi)
-            a.hp--
-            spawnParticles(bullets[bi].x, bullets[bi].y, a.hp <= 0 ? '#c8202e' : '#8a8296', a.hp <= 0 ? 12 : 5)
-            if (a.hp <= 0) { score += Math.floor(a.sz * (level * 0.5 + 1)); updateHUD(); a.dead = true }
-            break
-          }
-        }
-        if (!a.dead && ship.invincible === 0) {
-          const dx = ship.x - a.x, dy = ship.y - a.y
-          if (dx*dx + dy*dy < (a.sz + 12)*(a.sz + 12)) {
-            lives--; ship.invincible = 120
-            spawnParticles(ship.x, ship.y, '#c8202e', 20)
-            updateHUD()
-            if (lives <= 0) { playerDied = true; break }
-          }
-        }
-      }
-
-      if (playerDied) { gameover(); return }
-
-      bullets   = bullets.filter((_, i) => !hitBullets.has(i))
-      asteroids = asteroids.filter(a => !a.dead && a.y < H + a.sz*2)
-      asteroids.forEach(drawAsteroid)
-
-      particles = particles.filter(p => p.life > 0)
-      particles.forEach(p => {
-        p.x += p.vx; p.y += p.vy; p.life -= p.decay
-        gctx.globalAlpha = p.life
-        gctx.beginPath(); gctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI*2)
-        gctx.fillStyle = p.color; gctx.fill()
-      })
-      gctx.globalAlpha = 1
-
-      if (ship.invincible === 0 || Math.floor(ship.invincible / 8) % 2 === 0) drawShip(ship.x, ship.y, 1)
-
-      const newLevel = Math.floor(score / 500) + 1
-      if (newLevel > level) { level = newLevel; updateHUD() }
-
-      gctx.font = '400 11px "DM Mono"'
-      gctx.fillStyle = 'rgba(138,130,150,0.35)'
-      gctx.textAlign = 'right'
-      gctx.fillText('SPACE DEFENDER', W - 12, H - 10)
-      gctx.textAlign = 'left'
-    }
-
-    function updateHUD() {
-      document.getElementById('gScore').textContent = score
-      document.getElementById('gLives').textContent = lives
-      document.getElementById('gLevel').textContent = level
-      if (score > hiScore) { hiScore = score; document.getElementById('gHi').textContent = hiScore }
-    }
-
-    function drawIdleScreen() {
-      gctx.clearRect(0, 0, W, H)
-      stars2.forEach(s => {
-        gctx.beginPath(); gctx.arc(s.x, s.y, s.r, 0, Math.PI*2)
-        gctx.fillStyle = `rgba(200,195,255,${s.a})`; gctx.fill()
-      })
-      drawShip(W/2, H/2 + 20, 0.6)
-      gctx.font = '400 13px "DM Mono"'
-      gctx.fillStyle = 'rgba(180,25,40,0.7)'
-      gctx.textAlign = 'center'
-      gctx.fillText('— SPACE DEFENDER —', W/2, H/2 - 30)
-      gctx.fillStyle = 'rgba(237,232,240,0.35)'
-      gctx.font = '300 10px "DM Mono"'
-      gctx.fillText('Press Start Game to play', W/2, H/2 - 10)
-      gctx.textAlign = 'left'
-    }
-
-    function gameover() {
-      state = 'dead'
-      cancelAnimationFrame(raf)
-      if (score > hiScore) { hiScore = score; document.getElementById('gHi').textContent = hiScore }
-      gctx.fillStyle = 'rgba(0,0,0,0.65)'; gctx.fillRect(0, 0, W, H)
-      gctx.font = '600 28px "Cinzel"'; gctx.fillStyle = 'rgba(200,32,46,0.9)'; gctx.textAlign = 'center'
-      gctx.fillText('GAME OVER', W/2, H/2 - 24)
-      gctx.font = '400 12px "DM Mono"'; gctx.fillStyle = 'rgba(237,232,240,0.7)'
-      gctx.fillText('Score: ' + score + '   Hi-Score: ' + hiScore, W/2, H/2 + 10)
-      gctx.font = '300 10px "DM Mono"'; gctx.fillStyle = 'rgba(138,130,150,0.6)'
-      gctx.fillText('Press Start Game to try again', W/2, H/2 + 38)
-      gctx.textAlign = 'left'
-      document.getElementById('gStartBtn').textContent = 'Try Again'
-    }
-
-    window.gameStart = function() {
-      cancelAnimationFrame(raf)
-      score = 0; lives = 3; level = 1
-      bullets = []; asteroids = []; particles = []
-      asteroidTimer = 0; shootCooldown = 0
-      ship.x = W/2; ship.y = H - 55; ship.invincible = 0
-      state = 'playing'; updateHUD()
-      document.getElementById('gStartBtn').textContent = 'Restart'
-      gameLoop()
-    }
-
-    window.gamePause = function() {
-      if (state === 'playing') {
-        state = 'paused'; cancelAnimationFrame(raf)
-        gctx.fillStyle = 'rgba(0,0,0,0.55)'; gctx.fillRect(0, 0, W, H)
-        gctx.font = '600 22px "Cinzel"'; gctx.fillStyle = 'rgba(237,232,240,0.85)'; gctx.textAlign = 'center'
-        gctx.fillText('PAUSED', W/2, H/2); gctx.textAlign = 'left'
-      } else if (state === 'paused') {
-        state = 'playing'; gameLoop()
-      }
-    }
-
-    gc.addEventListener('click', () => {
-      if (state === 'playing' && shootCooldown === 0) {
-        bullets.push({ x: ship.x, y: ship.y - ship.h/2, vy: -9 })
-        spawnParticles(ship.x, ship.y - ship.h/2, '#c8202e', 3)
-        shootCooldown = 12
-      }
-    })
-
-    window.addEventListener('keydown', e => {
-      keys[e.key] = true
-      if ([' ', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-        const rect = gc.getBoundingClientRect()
-        if (rect.top < window.innerHeight && rect.bottom > 0) e.preventDefault()
-      }
-    })
-    window.addEventListener('keyup', e => { keys[e.key] = false })
-
-    let touchStartX = null
-    gc.addEventListener('touchstart', e => {
-      e.preventDefault()
-      touchStartX = e.touches[0].clientX
-      if (state === 'playing' && shootCooldown === 0) {
-        bullets.push({ x: ship.x, y: ship.y - ship.h/2, vy: -9 })
-        spawnParticles(ship.x, ship.y - ship.h/2, '#c8202e', 3)
-        shootCooldown = 12
-      }
-    }, { passive: false })
-    gc.addEventListener('touchmove', e => {
-      e.preventDefault()
-      if (touchStartX === null) return
-      const dx = e.touches[0].clientX - touchStartX
-      const scale = W / gc.clientWidth
-      ship.x = Math.max(ship.w/2, Math.min(W - ship.w/2, ship.x + dx * scale))
-      touchStartX = e.touches[0].clientX
-    }, { passive: false })
-    gc.addEventListener('touchend', () => { touchStartX = null })
-
-    drawIdleScreen()
-  })()
-
   /* ── PHOTO FLY AWAY ── */
-  /* FIX 2: named handlers + animationName check prevents the float
-     animation from accidentally triggering the sequence early      */
   let photoFlying = false
   function flyPhoto() {
     if (photoFlying) return
     const card = document.getElementById('photoCard')
     photoFlying = true
-
     card.style.animation = 'none'
-    void card.offsetWidth  // force reflow to flush the "none"
+    void card.offsetWidth
     card.style.animation = 'flyAway 0.65s cubic-bezier(0.4,0,0.2,1) forwards'
-
     card.addEventListener('animationend', function onEnd(e) {
       if (e.animationName !== 'flyAway') return
       card.removeEventListener('animationend', onEnd)
