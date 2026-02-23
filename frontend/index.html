@@ -1,5 +1,3 @@
-fix the game, it does not display in my website:
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +47,6 @@ fix the game, it does not display in my website:
     .mobile-socials a { color: var(--muted); display: flex; align-items: center; }
 
     /* ── SHARED ── */
-    /* Tight sections — 52px top/bottom instead of 100px */
     section { padding: 52px 0; }
     section:nth-child(even) { background: rgba(255,255,255,0.013); }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
@@ -62,20 +59,9 @@ fix the game, it does not display in my website:
     .btn-outline { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.2); color: var(--text); padding: 13px 30px; border-radius: 7px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; transition: border-color 0.25s, transform 0.2s; }
     .btn-outline:hover { border-color: rgba(255,255,255,0.45); transform: translateY(-2px); }
 
-    /* ── HERO — split layout: text left, photo right ── */
-    #hero {
-      min-height: 100vh;
-      display: flex; align-items: center;
-      padding: 80px 40px 60px;
-      position: relative;
-    }
-    .hero-grid {
-      max-width: 1200px; margin: 0 auto; width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 64px;
-      align-items: center;
-    }
+    /* ── HERO ── */
+    #hero { min-height: 100vh; display: flex; align-items: center; padding: 80px 40px 60px; position: relative; }
+    .hero-grid { max-width: 1200px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: 1fr 340px; gap: 64px; align-items: center; }
     .hero-text { position: relative; z-index: 2; }
     .hero-eyebrow { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--red); margin-bottom: 24px; animation: fadeUp 0.7s ease both; }
     .hero-name { font-family: 'Cinzel', serif; font-size: clamp(2.8rem, 7vw, 6.5rem); font-weight: 400; line-height: 0.95; color: var(--text); margin-bottom: 24px; letter-spacing: 0.02em; animation: fadeUp 0.8s ease 0.08s both; }
@@ -86,7 +72,7 @@ fix the game, it does not display in my website:
     .hero-social { display: flex; align-items: center; gap: 7px; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.25s; }
     .hero-social:hover { color: var(--text); }
 
-    /* Profile photo — floating card */
+    /* ── PHOTO CARD ── */
     .hero-photo-col { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; }
 
     @keyframes floatCard {
@@ -120,11 +106,9 @@ fix the game, it does not display in my website:
       cursor: pointer;
       animation: floatCard 6s ease-in-out infinite;
       user-select: none;
+      will-change: transform;
     }
-    /* fly animations applied via JS inline style */
-    .hero-photo-card:hover {
-      box-shadow: 0 0 0 1px rgba(180,25,40,0.25), 0 32px 72px rgba(0,0,0,0.8), 0 6px 24px rgba(180,25,40,0.15);
-    }
+    .hero-photo-card:hover { box-shadow: 0 0 0 1px rgba(180,25,40,0.25), 0 32px 72px rgba(0,0,0,0.8), 0 6px 24px rgba(180,25,40,0.15); }
     .hero-photo-card::before, .hero-photo-card::after { content:''; position:absolute; width:16px; height:16px; border-color:var(--red); border-style:solid; opacity:0.5; }
     .hero-photo-card::before { top:6px; left:6px; border-width:1.5px 0 0 1.5px; }
     .hero-photo-card::after  { bottom:38px; right:6px; border-width:0 1.5px 1.5px 0; }
@@ -136,7 +120,7 @@ fix the game, it does not display in my website:
     .hero-photo-caption span { font-family:'Cinzel',serif; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:rgba(255,255,255,0.35); }
     .hero-photo-caption .cap-dot { width:3px; height:3px; border-radius:50%; background:var(--red); opacity:0.6; }
 
-    /* ── ABOUT — no photo, just text + skills ── */
+    /* ── ABOUT ── */
     .about-body { font-family: 'Crimson Pro', serif; font-size: 1.1rem; color: var(--muted); margin-bottom: 16px; line-height: 1.9; }
     .about-body strong { color: var(--text); }
     .about-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
@@ -208,42 +192,21 @@ fix the game, it does not display in my website:
     .gb-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
     .gb-msg { font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--muted); line-height: 1.8; }
 
-
     /* ── GAME ── */
     #game { padding: 52px 0; }
-    .game-wrap {
-      display: flex; flex-direction: column; align-items: center; gap: 20px;
-    }
-    .game-hud {
-      display: flex; align-items: center; gap: 36px;
-      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
-    }
+    .game-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .game-hud { display: flex; align-items: center; gap: 36px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); flex-wrap: wrap; justify-content: center; }
     .game-hud span { display: flex; align-items: center; gap: 8px; }
     .game-hud strong { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--text); }
-    #gameCanvas {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #00000a;
-      display: block;
-      cursor: crosshair;
-      max-width: 100%;
-    }
-    .game-controls {
-      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-    }
-    .game-btn {
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em;
-      text-transform: uppercase; padding: 10px 24px; border-radius: 6px;
-      cursor: pointer; transition: all 0.25s; border: none;
-    }
+    /* FIX 1: was `background: transparent` — game was invisible */
+    #gameCanvas { border: 1px solid var(--border); border-radius: 10px; background: #00000a; display: block; cursor: crosshair; max-width: 100%; }
+    .game-controls { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .game-btn { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; padding: 10px 24px; border-radius: 6px; cursor: pointer; transition: all 0.25s; border: none; }
     .game-btn-primary { background: var(--red); color: #fff; }
     .game-btn-primary:hover { background: #a8131f; transform: translateY(-2px); }
     .game-btn-secondary { background: transparent; color: var(--muted); border: 1px solid var(--border); }
     .game-btn-secondary:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-    .game-hint {
-      font-size: 10px; letter-spacing: 0.14em; color: var(--muted);
-      text-transform: uppercase; text-align: center;
-    }
+    .game-hint { font-size: 10px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; text-align: center; }
 
     /* ── FOOTER ── */
     footer { border-top: 1px solid var(--border); padding: 44px 40px; text-align: center; }
@@ -404,7 +367,7 @@ fix the game, it does not display in my website:
               <div class="project-tags"><span class="tag">Vue.js</span><span class="tag">Flask</span><span class="tag">Supabase</span></div>
             </div>
             <h3 class="project-title">Personal Website Finals</h3>
-            <p class="project-desc">Full-stack personal profile website with Vue.js frontend, Flask REST API on Render.com, and Supabase PostgreSQL database with a working guestbook (GET & POST).</p>
+            <p class="project-desc">Full-stack personal profile website with Vue.js frontend, Flask REST API on Render.com, and Supabase PostgreSQL database with a working guestbook (GET &amp; POST).</p>
             <a href="https://github.com/apcrntura/personal-website-finals" target="_blank" rel="noopener" class="project-btn">View on GitHub <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
           </div>
         </div>
@@ -612,11 +575,10 @@ fix the game, it does not display in my website:
   /* ══════════════════════════════════════
      SPACE DEFENDER — ASTEROID SHOOTER
   ══════════════════════════════════════ */
-  (function() {
+  ;(function() {
     const gc   = document.getElementById('gameCanvas')
     const gctx = gc.getContext('2d')
 
-    // Responsive canvas sizing
     function resizeGame() {
       const maxW = Math.min(720, gc.parentElement.clientWidth - 40)
       gc.style.width  = maxW + 'px'
@@ -626,22 +588,16 @@ fix the game, it does not display in my website:
     window.addEventListener('resize', resizeGame)
 
     const W = 720, H = 420
-    let state = 'idle'  // idle | playing | paused | dead
+    let state = 'idle'
     let score = 0, lives = 3, level = 1, hiScore = 0
     let raf = null
 
-    // ── SHIP ──
-    const ship = { x: W/2, y: H - 55, w: 28, h: 32, speed: 5, vx: 0, invincible: 0 }
+    const ship = { x: W/2, y: H - 55, w: 28, h: 32, speed: 5, invincible: 0 }
     const keys = {}
 
-    // ── BULLETS ──
-    let bullets  = []    // player bullets
-    let asteroids = []
-    let particles = []
-    let stars2    = []   // game layer parallax stars
+    let bullets = [], asteroids = [], particles = [], stars2 = []
     let shootCooldown = 0
 
-    // Generate game-layer stars once
     for (let i = 0; i < 80; i++) {
       stars2.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.2+0.2, sp: Math.random()*0.4+0.1, a: Math.random()*0.5+0.2 })
     }
@@ -657,7 +613,7 @@ fix the game, it does not display in my website:
         const r = sz * (0.72 + Math.random() * 0.38)
         verts.push({ x: Math.cos(a)*r, y: Math.sin(a)*r })
       }
-      asteroids.push({ x, y: -sz, vx: (Math.random()-0.5)*1.4, vy: spd, sz, rot: 0, rotSpd: (Math.random()-0.5)*0.04, verts, hp: sz > 32 ? 2 : 1, maxHp: sz > 32 ? 2 : 1 })
+      asteroids.push({ x, y: -sz, vx: (Math.random()-0.5)*1.4, vy: spd, sz, rot: 0, rotSpd: (Math.random()-0.5)*0.04, verts, hp: sz > 32 ? 2 : 1, maxHp: sz > 32 ? 2 : 1, dead: false })
     }
 
     function spawnParticles(x, y, color, n) {
@@ -668,12 +624,10 @@ fix the game, it does not display in my website:
       }
     }
 
-    // ── DRAW SHIP ──
     function drawShip(x, y, alpha) {
       gctx.save()
       gctx.globalAlpha = alpha
       gctx.translate(x, y)
-      // Body
       gctx.beginPath()
       gctx.moveTo(0, -ship.h/2)
       gctx.lineTo(ship.w/2, ship.h/2)
@@ -681,57 +635,42 @@ fix the game, it does not display in my website:
       gctx.lineTo(-ship.w/4, ship.h/3)
       gctx.lineTo(-ship.w/2, ship.h/2)
       gctx.closePath()
-      gctx.strokeStyle = '#ede8f0'
-      gctx.lineWidth = 1.5
-      gctx.stroke()
-      // Cockpit
+      gctx.strokeStyle = '#ede8f0'; gctx.lineWidth = 1.5; gctx.stroke()
       gctx.beginPath()
       gctx.moveTo(0, -ship.h/4)
       gctx.lineTo(ship.w/5, ship.h/6)
       gctx.lineTo(-ship.w/5, ship.h/6)
       gctx.closePath()
-      gctx.strokeStyle = 'rgba(200,32,46,0.8)'
-      gctx.lineWidth = 1
-      gctx.stroke()
-      // Engine glow
+      gctx.strokeStyle = 'rgba(200,32,46,0.8)'; gctx.lineWidth = 1; gctx.stroke()
       if (keys['ArrowLeft'] || keys['a'] || keys['ArrowRight'] || keys['d']) {
-        gctx.beginPath()
-        gctx.arc(0, ship.h/2, 4, 0, Math.PI*2)
-        gctx.fillStyle = 'rgba(200,32,46,0.7)'
-        gctx.fill()
+        gctx.beginPath(); gctx.arc(0, ship.h/2, 4, 0, Math.PI*2)
+        gctx.fillStyle = 'rgba(200,32,46,0.7)'; gctx.fill()
       }
       gctx.restore()
     }
 
-    // ── DRAW ASTEROID ──
     function drawAsteroid(a) {
       gctx.save()
-      gctx.translate(a.x, a.y)
-      gctx.rotate(a.rot)
+      gctx.translate(a.x, a.y); gctx.rotate(a.rot)
       gctx.beginPath()
       gctx.moveTo(a.verts[0].x, a.verts[0].y)
       for (let i = 1; i < a.verts.length; i++) gctx.lineTo(a.verts[i].x, a.verts[i].y)
       gctx.closePath()
       const dmg = 1 - (a.hp / a.maxHp)
-      gctx.strokeStyle = dmg > 0 ? `rgba(200,32,46,0.9)` : 'rgba(200,195,220,0.75)'
-      gctx.lineWidth = 1.5
-      gctx.stroke()
-      gctx.fillStyle = dmg > 0 ? 'rgba(80,10,20,0.3)' : 'rgba(20,10,35,0.4)'
-      gctx.fill()
+      gctx.strokeStyle = dmg > 0 ? 'rgba(200,32,46,0.9)' : 'rgba(200,195,220,0.75)'
+      gctx.lineWidth = 1.5; gctx.stroke()
+      gctx.fillStyle = dmg > 0 ? 'rgba(80,10,20,0.3)' : 'rgba(20,10,35,0.4)'; gctx.fill()
       gctx.restore()
     }
 
     let asteroidTimer = 0
-    let asteroidInterval = 120
 
     function gameLoop() {
       if (state !== 'playing') return
       raf = requestAnimationFrame(gameLoop)
 
-      // Clear
       gctx.clearRect(0, 0, W, H)
 
-      // BG stars (game layer)
       stars2.forEach(s => {
         s.y += s.sp
         if (s.y > H) { s.y = 0; s.x = Math.random()*W }
@@ -739,12 +678,10 @@ fix the game, it does not display in my website:
         gctx.fillStyle = `rgba(200,195,255,${s.a})`; gctx.fill()
       })
 
-      // Move ship
       if ((keys['ArrowLeft'] || keys['a']) && ship.x - ship.w/2 > 0) ship.x -= ship.speed
       if ((keys['ArrowRight'] || keys['d']) && ship.x + ship.w/2 < W) ship.x += ship.speed
       if (ship.invincible > 0) ship.invincible--
 
-      // Auto-shoot on spacebar held
       if (shootCooldown > 0) shootCooldown--
       if ((keys[' '] || keys['Space']) && shootCooldown === 0) {
         bullets.push({ x: ship.x, y: ship.y - ship.h/2, vy: -9 })
@@ -752,7 +689,6 @@ fix the game, it does not display in my website:
         shootCooldown = 12
       }
 
-      // Move & draw bullets
       bullets.forEach(b => { b.y += b.vy })
       bullets = bullets.filter(b => b.y > -10)
       bullets.forEach(b => {
@@ -762,67 +698,60 @@ fix the game, it does not display in my website:
         gctx.fillStyle = 'rgba(200,32,46,0.35)'; gctx.fill()
       })
 
-      // Spawn asteroids
       asteroidTimer++
-      asteroidInterval = Math.max(30, 120 - level * 10)
+      const asteroidInterval = Math.max(30, 120 - level * 10)
       if (asteroidTimer >= asteroidInterval) { spawnAsteroid(); asteroidTimer = 0 }
 
-      // Move asteroids
       asteroids.forEach(a => { a.x += a.vx; a.y += a.vy; a.rot += a.rotSpd })
 
-      // Bullet-asteroid collision (safe iteration with flags)
+      /* ── COLLISION — safe: flag sets, no splice inside forEach ── */
       const hitBullets = new Set()
-      asteroids.forEach(a => {
-        bullets.forEach((b, bi) => {
-          if (hitBullets.has(bi)) return
-          const dx = b.x - a.x, dy = b.y - a.y
-          if (Math.sqrt(dx*dx+dy*dy) < a.sz) {
+      let playerDied = false
+
+      for (const a of asteroids) {
+        if (a.dead) continue
+        for (let bi = 0; bi < bullets.length; bi++) {
+          if (hitBullets.has(bi)) continue
+          const dx = bullets[bi].x - a.x, dy = bullets[bi].y - a.y
+          if (dx*dx + dy*dy < a.sz*a.sz) {
             hitBullets.add(bi)
             a.hp--
-            spawnParticles(b.x, b.y, a.hp <= 0 ? '#c8202e' : '#8a8296', a.hp <= 0 ? 12 : 5)
-            if (a.hp <= 0) {
-              score += Math.floor(a.sz * (level * 0.5 + 1))
-              updateHUD()
-              a.dead = true
-            }
-          }
-        })
-        // Ship collision
-        if (ship.invincible === 0 && !a.dead) {
-          const dx = ship.x - a.x, dy = ship.y - a.y
-          if (Math.sqrt(dx*dx+dy*dy) < a.sz + 12) {
-            lives--
-            ship.invincible = 120
-            spawnParticles(ship.x, ship.y, '#c8202e', 20)
-            updateHUD()
-            if (lives <= 0) { gameover(); return }
+            spawnParticles(bullets[bi].x, bullets[bi].y, a.hp <= 0 ? '#c8202e' : '#8a8296', a.hp <= 0 ? 12 : 5)
+            if (a.hp <= 0) { score += Math.floor(a.sz * (level * 0.5 + 1)); updateHUD(); a.dead = true }
+            break
           }
         }
-      })
+        if (!a.dead && ship.invincible === 0) {
+          const dx = ship.x - a.x, dy = ship.y - a.y
+          if (dx*dx + dy*dy < (a.sz + 12)*(a.sz + 12)) {
+            lives--; ship.invincible = 120
+            spawnParticles(ship.x, ship.y, '#c8202e', 20)
+            updateHUD()
+            if (lives <= 0) { playerDied = true; break }
+          }
+        }
+      }
 
-      // Remove hit bullets and dead/offscreen asteroids, then draw
-      bullets = bullets.filter((_, i) => !hitBullets.has(i))
+      if (playerDied) { gameover(); return }
+
+      bullets   = bullets.filter((_, i) => !hitBullets.has(i))
       asteroids = asteroids.filter(a => !a.dead && a.y < H + a.sz*2)
-      asteroids.forEach(a => drawAsteroid(a))
+      asteroids.forEach(drawAsteroid)
 
-      // Particles
       particles = particles.filter(p => p.life > 0)
       particles.forEach(p => {
         p.x += p.vx; p.y += p.vy; p.life -= p.decay
+        gctx.globalAlpha = p.life
         gctx.beginPath(); gctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI*2)
-        gctx.fillStyle = p.color; gctx.globalAlpha = p.life; gctx.fill()
-        gctx.globalAlpha = 1
+        gctx.fillStyle = p.color; gctx.fill()
       })
+      gctx.globalAlpha = 1
 
-      // Draw ship (blink when invincible)
-      const showShip = ship.invincible === 0 || Math.floor(ship.invincible / 8) % 2 === 0
-      if (showShip) drawShip(ship.x, ship.y, 1)
+      if (ship.invincible === 0 || Math.floor(ship.invincible / 8) % 2 === 0) drawShip(ship.x, ship.y, 1)
 
-      // Level up every 500 pts
       const newLevel = Math.floor(score / 500) + 1
       if (newLevel > level) { level = newLevel; updateHUD() }
 
-      // Draw score overlay
       gctx.font = '400 11px "DM Mono"'
       gctx.fillStyle = 'rgba(138,130,150,0.35)'
       gctx.textAlign = 'right'
@@ -833,7 +762,7 @@ fix the game, it does not display in my website:
     function updateHUD() {
       document.getElementById('gScore').textContent = score
       document.getElementById('gLives').textContent = lives
-      document.getElementById('gLevel').textContent  = level
+      document.getElementById('gLevel').textContent = level
       if (score > hiScore) { hiScore = score; document.getElementById('gHi').textContent = hiScore }
     }
 
@@ -858,53 +787,39 @@ fix the game, it does not display in my website:
       state = 'dead'
       cancelAnimationFrame(raf)
       if (score > hiScore) { hiScore = score; document.getElementById('gHi').textContent = hiScore }
-
-      gctx.fillStyle = 'rgba(0,0,0,0.65)'
-      gctx.fillRect(0, 0, W, H)
-      gctx.font = '600 28px "Cinzel"'
-      gctx.fillStyle = 'rgba(200,32,46,0.9)'
-      gctx.textAlign = 'center'
+      gctx.fillStyle = 'rgba(0,0,0,0.65)'; gctx.fillRect(0, 0, W, H)
+      gctx.font = '600 28px "Cinzel"'; gctx.fillStyle = 'rgba(200,32,46,0.9)'; gctx.textAlign = 'center'
       gctx.fillText('GAME OVER', W/2, H/2 - 24)
-      gctx.font = '400 12px "DM Mono"'
-      gctx.fillStyle = 'rgba(237,232,240,0.7)'
+      gctx.font = '400 12px "DM Mono"'; gctx.fillStyle = 'rgba(237,232,240,0.7)'
       gctx.fillText('Score: ' + score + '   Hi-Score: ' + hiScore, W/2, H/2 + 10)
-      gctx.font = '300 10px "DM Mono"'
-      gctx.fillStyle = 'rgba(138,130,150,0.6)'
+      gctx.font = '300 10px "DM Mono"'; gctx.fillStyle = 'rgba(138,130,150,0.6)'
       gctx.fillText('Press Start Game to try again', W/2, H/2 + 38)
       gctx.textAlign = 'left'
       document.getElementById('gStartBtn').textContent = 'Try Again'
     }
 
     window.gameStart = function() {
+      cancelAnimationFrame(raf)
       score = 0; lives = 3; level = 1
       bullets = []; asteroids = []; particles = []
       asteroidTimer = 0; shootCooldown = 0
       ship.x = W/2; ship.y = H - 55; ship.invincible = 0
-      state = 'playing'
-      updateHUD()
+      state = 'playing'; updateHUD()
       document.getElementById('gStartBtn').textContent = 'Restart'
-      cancelAnimationFrame(raf)
       gameLoop()
     }
 
     window.gamePause = function() {
       if (state === 'playing') {
-        state = 'paused'
-        cancelAnimationFrame(raf)
-        gctx.fillStyle = 'rgba(0,0,0,0.55)'
-        gctx.fillRect(0, 0, W, H)
-        gctx.font = '600 22px "Cinzel"'
-        gctx.fillStyle = 'rgba(237,232,240,0.85)'
-        gctx.textAlign = 'center'
-        gctx.fillText('PAUSED', W/2, H/2)
-        gctx.textAlign = 'left'
+        state = 'paused'; cancelAnimationFrame(raf)
+        gctx.fillStyle = 'rgba(0,0,0,0.55)'; gctx.fillRect(0, 0, W, H)
+        gctx.font = '600 22px "Cinzel"'; gctx.fillStyle = 'rgba(237,232,240,0.85)'; gctx.textAlign = 'center'
+        gctx.fillText('PAUSED', W/2, H/2); gctx.textAlign = 'left'
       } else if (state === 'paused') {
-        state = 'playing'
-        gameLoop()
+        state = 'playing'; gameLoop()
       }
     }
 
-    // Click to shoot
     gc.addEventListener('click', () => {
       if (state === 'playing' && shootCooldown === 0) {
         bullets.push({ x: ship.x, y: ship.y - ship.h/2, vy: -9 })
@@ -913,18 +828,15 @@ fix the game, it does not display in my website:
       }
     })
 
-    // Keyboard
     window.addEventListener('keydown', e => {
       keys[e.key] = true
-      if (e.key === ' ' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-        // Only prevent scroll if game canvas is near viewport
+      if ([' ', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
         const rect = gc.getBoundingClientRect()
         if (rect.top < window.innerHeight && rect.bottom > 0) e.preventDefault()
       }
     })
     window.addEventListener('keyup', e => { keys[e.key] = false })
 
-    // Mobile touch controls — drag to move, tap to shoot
     let touchStartX = null
     gc.addEventListener('touchstart', e => {
       e.preventDefault()
@@ -945,22 +857,20 @@ fix the game, it does not display in my website:
     }, { passive: false })
     gc.addEventListener('touchend', () => { touchStartX = null })
 
-    // Draw idle on load
     drawIdleScreen()
   })()
 
   /* ── PHOTO FLY AWAY ── */
+  /* FIX 2: named handlers + animationName check prevents the float
+     animation from accidentally triggering the sequence early      */
   let photoFlying = false
   function flyPhoto() {
     if (photoFlying) return
     const card = document.getElementById('photoCard')
     photoFlying = true
 
-    // Stop float, trigger fly
     card.style.animation = 'none'
-    card.style.transform = 'rotate(1.5deg) translate(0,0) scale(1)'
-    // Force reflow so the none takes effect
-    void card.offsetWidth
+    void card.offsetWidth  // force reflow to flush the "none"
     card.style.animation = 'flyAway 0.65s cubic-bezier(0.4,0,0.2,1) forwards'
 
     card.addEventListener('animationend', function onEnd(e) {
@@ -971,13 +881,12 @@ fix the game, it does not display in my website:
         card.addEventListener('animationend', function onBack(e) {
           if (e.animationName !== 'flyBack') return
           card.removeEventListener('animationend', onBack)
-          card.style.animation = ''
+          card.style.animation = 'floatCard 6s ease-in-out infinite'
           photoFlying = false
         })
       }, 280)
     })
   }
-
 </script>
 </body>
 </html>
