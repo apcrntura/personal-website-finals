@@ -2,29 +2,30 @@
   <section id="about">
     <div class="container">
       <div class="about-grid">
-
-        <div class="about-text-col">
-          <p class="section-label">01 — About</p>
+        <div class="about-left">
+          <p class="section-tag">// 01 &mdash; About</p>
           <h2 class="section-title">Who I Am</h2>
-          <p class="about-body">
-            I'm <strong>Rae Allen Tura</strong>, a BS Information Technology student at Asia Pacific College.
-            I value precision, clean design, and building things that work exactly as intended.
+          <p class="about-text">
+            I'm <strong>Rae Allen Tura</strong>, an IT-oriented individual who values precision and clean design.
+            I believe great technology is invisible — it works so seamlessly that users never have to think about it.
           </p>
-          <p class="about-body">
-            I enjoy tackling complex problems across the full stack — from designing relational databases
-            to crafting responsive frontend interfaces that users actually enjoy using.
+          <p class="about-text">
+            Driven by curiosity and a love for problem-solving, I approach every project with discipline,
+            attention to detail, and a desire to create meaningful, impactful digital solutions.
           </p>
-          <div class="skills">
-            <span class="skill" v-for="s in skills" :key="s">{{ s }}</span>
+          <div class="skills-grid">
+            <div class="skill" v-for="skill in skills" :key="skill">{{ skill }}</div>
           </div>
         </div>
-
-        <div class="about-photo-col">
-          <div class="photo-frame">
-            <div class="photo-bg"></div>
+        <div class="about-right">
+          <div class="avatar-wrap">
+            <div class="avatar-placeholder">
+              <span>RAT</span>
+            </div>
+            <div class="avatar-ring"></div>
+            <div class="avatar-ring ring-2"></div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -35,79 +36,105 @@ export default {
   name: 'AboutSection',
   data() {
     return {
-      skills: ['Vue.js', 'Flask', 'Supabase', 'PostgreSQL', 'Python', 'JavaScript', 'REST APIs', 'PC Troubleshooting']
+      skills: ['Vue.js', 'NestJS', 'Flask', 'Supabase', 'PostgreSQL', 'Python', 'JavaScript', 'PC Troubleshooting']
     }
   }
 }
 </script>
 
 <style scoped>
-section { padding: 80px 0; }
+section { padding: 120px 0; }
 
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 64px;
+  grid-template-columns: 1fr 380px;
+  gap: 80px;
   align-items: center;
 }
 
-.about-body {
-  font-family: 'Crimson Pro', serif;
-  font-size: 1.1rem;
+.about-text {
   color: var(--muted);
-  margin-bottom: 18px;
-  line-height: 1.85;
+  margin-bottom: 20px;
+  font-size: 15px;
 }
-.about-body strong { color: var(--text); }
 
-.skills {
+.about-text strong { color: var(--text); }
+
+.skills-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 28px;
+  gap: 10px;
+  margin-top: 36px;
 }
+
 .skill {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 6px 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  padding: 8px 16px;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 100px;
   color: var(--muted);
-  transition: color 0.25s, border-color 0.25s;
+  transition: all 0.3s;
 }
-.skill:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
 
-.photo-frame {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 12px;
-  overflow: hidden;
+.skill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.avatar-wrap {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto;
+}
+
+.avatar-placeholder {
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(126,184,247,0.2), rgba(201,160,245,0.2));
   border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
-/* Using CSS background-image avoids Vite trying to resolve it as a JS module */
-.photo-bg {
-  width: 100%;
-  height: 100%;
-  min-height: 280px;
-  background-image: url('/profile.jpg');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
+.avatar-placeholder span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.1em;
 }
 
-@media (max-width: 800px) {
+.avatar-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  border: 1px solid rgba(126,184,247,0.2);
+  transform: translate(-50%, -50%);
+  animation: spin 20s linear infinite;
+}
+
+.ring-2 {
+  width: 280px; height: 280px;
+  border-color: rgba(201,160,245,0.1);
+  animation: spin 30s linear infinite reverse;
+}
+
+@keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+@media (max-width: 900px) {
   .about-grid {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 60px;
   }
-  .about-photo-col {
-    max-width: 220px;
-    margin: 0 auto;
-  }
-  .photo-bg {
-    min-height: 220px;
-  }
+  .about-right { order: -1; }
 }
 </style>
