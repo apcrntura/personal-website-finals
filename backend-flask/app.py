@@ -13,8 +13,7 @@ CORS(app, origins=["*"])  # In production, replace * with your Vercel frontend U
 # Supabase client
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
 
 @app.route("/", methods=["GET"])
 def index():
