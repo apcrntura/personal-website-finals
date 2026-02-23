@@ -20,12 +20,11 @@
 
         <div class="about-photo-col">
           <div class="photo-frame">
-            <img src="/profile.jpg" alt="Rae Allen Tura" class="photo"
-              @error="showFallback = true" v-if="!showFallback" />
-            <div class="photo-fallback" v-else>
-              <span>RAT</span>
-              <p>Upload profile.jpg<br>to /frontend/public/</p>
-            </div>
+            <img
+              src="/profile.jpg"
+              alt="Rae Allen Tura"
+              class="photo"
+            />
           </div>
         </div>
       </div>
@@ -38,7 +37,6 @@ export default {
   name: 'AboutSection',
   data() {
     return {
-      showFallback: false,
       skills: ['Vue.js', 'Flask', 'Supabase', 'PostgreSQL', 'Python', 'JavaScript', 'REST APIs', 'PC Troubleshooting']
     }
   }
@@ -51,7 +49,8 @@ section { padding: 80px 0; }
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 300px;
-  gap: 64px; align-items: center;
+  gap: 64px;
+  align-items: center;
 }
 
 .about-body {
@@ -76,26 +75,11 @@ section { padding: 80px 0; }
   width: 100%; aspect-ratio: 1;
   border-radius: 12px; overflow: hidden;
   border: 1px solid var(--border);
-  background: rgba(255,255,255,0.03);
 }
 .photo {
   width: 100%; height: 100%;
   object-fit: cover; object-position: center top;
   display: block;
-}
-.photo-fallback {
-  width: 100%; height: 100%;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 10px;
-}
-.photo-fallback span {
-  font-family: 'Cinzel', serif;
-  font-size: 2.5rem; color: var(--red);
-}
-.photo-fallback p {
-  font-size: 11px; color: var(--muted);
-  text-align: center; line-height: 1.6;
 }
 
 @media (max-width: 800px) {
