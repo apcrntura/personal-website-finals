@@ -208,6 +208,43 @@
     .gb-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
     .gb-msg { font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--muted); line-height: 1.8; }
 
+
+    /* ── GAME ── */
+    #game { padding: 52px 0; }
+    .game-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+    }
+    .game-hud {
+      display: flex; align-items: center; gap: 36px;
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+    }
+    .game-hud span { display: flex; align-items: center; gap: 8px; }
+    .game-hud strong { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--text); }
+    #gameCanvas {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: transparent;
+      display: block;
+      cursor: crosshair;
+      max-width: 100%;
+    }
+    .game-controls {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    }
+    .game-btn {
+      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; padding: 10px 24px; border-radius: 6px;
+      cursor: pointer; transition: all 0.25s; border: none;
+    }
+    .game-btn-primary { background: var(--red); color: #fff; }
+    .game-btn-primary:hover { background: #a8131f; transform: translateY(-2px); }
+    .game-btn-secondary { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .game-btn-secondary:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+    .game-hint {
+      font-size: 10px; letter-spacing: 0.14em; color: var(--muted);
+      text-transform: uppercase; text-align: center;
+    }
+
     /* ── FOOTER ── */
     footer { border-top: 1px solid var(--border); padding: 44px 40px; text-align: center; }
     .footer-logo { font-family: 'Cinzel', serif; font-size: 1.6rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
@@ -267,6 +304,7 @@
         <li><a href="#education">Education</a></li>
         <li><a href="#experience">Experience</a></li>
         <li><a href="#goals">Goals</a></li>
+        <li><a href="#game">Game</a></li>
         <li><a href="#guestbook">Guestbook</a></li>
       </ul>
       <div class="nav-socials">
@@ -282,6 +320,7 @@
       <a href="#education" onclick="closeMenu()">Education</a>
       <a href="#experience" onclick="closeMenu()">Experience</a>
       <a href="#goals" onclick="closeMenu()">Goals</a>
+      <a href="#game" onclick="closeMenu()">Game</a>
       <a href="#guestbook" onclick="closeMenu()">Guestbook</a>
       <div class="mobile-socials">
         <a href="https://github.com/apcrntura" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
@@ -442,6 +481,29 @@
         </div>
       </div>
     </section>
+
+    <!-- GAME -->
+    <section id="game">
+      <div class="container">
+        <p class="section-label">07 — Mini Game</p>
+        <h2 class="section-title">Space Defender</h2>
+        <div class="game-wrap">
+          <div class="game-hud">
+            <span>Score <strong id="gScore">0</strong></span>
+            <span>Lives <strong id="gLives">3</strong></span>
+            <span>Level <strong id="gLevel">1</strong></span>
+            <span>Hi-Score <strong id="gHi">0</strong></span>
+          </div>
+          <canvas id="gameCanvas" width="720" height="420"></canvas>
+          <div class="game-controls">
+            <button class="game-btn game-btn-primary" id="gStartBtn" onclick="gameStart()">Start Game</button>
+            <button class="game-btn game-btn-secondary" onclick="gamePause()">Pause</button>
+          </div>
+          <p class="game-hint">← → Arrow keys or A/D to move &nbsp;·&nbsp; Spacebar or click to shoot &nbsp;·&nbsp; Survive the asteroid field</p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- FOOTER -->
@@ -546,6 +608,342 @@
     finally { btn.disabled=false; btn.textContent='Send Message' }
   }
   loadComments()
+
+  /* ══════════════════════════════════════
+     SPACE DEFENDER — ASTEROID SHOOTER
+  ══════════════════════════════════════ */
+  (function() {
+    const gc   = document.getElementById('gameCanvas')
+    const gctx = gc.getContext('2d')
+
+    // Responsive canvas sizing
+    function resizeGame() {
+      const maxW = Math.min(720, gc.parentElement.clientWidth - 40)
+      gc.style.width  = maxW + 'px'
+      gc.style.height = (maxW * 420/720) + 'px'
+    }
+    resizeGame()
+    window.addEventListener('resize', resizeGame)
+
+    const W = 720, H = 420
+    let state = 'idle'  // idle | playing | paused | dead
+    let score = 0, lives = 3, level = 1, hiScore = 0
+    let raf = null
+
+    // ── SHIP ──
+    const ship = { x: W/2, y: H - 55, w: 28, h: 32, speed: 5, vx: 0, invincible: 0 }
+    const keys = {}
+
+    // ── BULLETS ──
+    let bullets  = []    // player bullets
+    let asteroids = []
+    let particles = []
+    let stars2    = []   // game layer parallax stars
+    let shootCooldown = 0
+
+    // Generate game-layer stars once
+    for (let i = 0; i < 80; i++) {
+      stars2.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.2+0.2, sp: Math.random()*0.4+0.1, a: Math.random()*0.5+0.2 })
+    }
+
+    function spawnAsteroid() {
+      const sz = 18 + Math.random() * (24 + level * 3)
+      const x  = sz + Math.random() * (W - sz*2)
+      const spd = 0.7 + Math.random() * (0.8 + level * 0.18)
+      const pts = Math.floor(Math.random()*6)+6
+      const verts = []
+      for (let i = 0; i < pts; i++) {
+        const a = (i / pts) * Math.PI * 2
+        const r = sz * (0.72 + Math.random() * 0.38)
+        verts.push({ x: Math.cos(a)*r, y: Math.sin(a)*r })
+      }
+      asteroids.push({ x, y: -sz, vx: (Math.random()-0.5)*1.4, vy: spd, sz, rot: 0, rotSpd: (Math.random()-0.5)*0.04, verts, hp: sz > 32 ? 2 : 1, maxHp: sz > 32 ? 2 : 1 })
+    }
+
+    function spawnParticles(x, y, color, n) {
+      for (let i = 0; i < n; i++) {
+        const a = Math.random() * Math.PI * 2
+        const spd = 1 + Math.random() * 3
+        particles.push({ x, y, vx: Math.cos(a)*spd, vy: Math.sin(a)*spd, life: 1, decay: 0.025+Math.random()*0.04, r: 2+Math.random()*3, color })
+      }
+    }
+
+    // ── DRAW SHIP ──
+    function drawShip(x, y, alpha) {
+      gctx.save()
+      gctx.globalAlpha = alpha
+      gctx.translate(x, y)
+      // Body
+      gctx.beginPath()
+      gctx.moveTo(0, -ship.h/2)
+      gctx.lineTo(ship.w/2, ship.h/2)
+      gctx.lineTo(ship.w/4, ship.h/3)
+      gctx.lineTo(-ship.w/4, ship.h/3)
+      gctx.lineTo(-ship.w/2, ship.h/2)
+      gctx.closePath()
+      gctx.strokeStyle = '#ede8f0'
+      gctx.lineWidth = 1.5
+      gctx.stroke()
+      // Cockpit
+      gctx.beginPath()
+      gctx.moveTo(0, -ship.h/4)
+      gctx.lineTo(ship.w/5, ship.h/6)
+      gctx.lineTo(-ship.w/5, ship.h/6)
+      gctx.closePath()
+      gctx.strokeStyle = 'rgba(200,32,46,0.8)'
+      gctx.lineWidth = 1
+      gctx.stroke()
+      // Engine glow
+      if (keys['ArrowLeft'] || keys['a'] || keys['ArrowRight'] || keys['d']) {
+        gctx.beginPath()
+        gctx.arc(0, ship.h/2, 4, 0, Math.PI*2)
+        gctx.fillStyle = 'rgba(200,32,46,0.7)'
+        gctx.fill()
+      }
+      gctx.restore()
+    }
+
+    // ── DRAW ASTEROID ──
+    function drawAsteroid(a) {
+      gctx.save()
+      gctx.translate(a.x, a.y)
+      gctx.rotate(a.rot)
+      gctx.beginPath()
+      gctx.moveTo(a.verts[0].x, a.verts[0].y)
+      for (let i = 1; i < a.verts.length; i++) gctx.lineTo(a.verts[i].x, a.verts[i].y)
+      gctx.closePath()
+      const dmg = 1 - (a.hp / a.maxHp)
+      gctx.strokeStyle = dmg > 0 ? `rgba(200,32,46,0.9)` : 'rgba(200,195,220,0.75)'
+      gctx.lineWidth = 1.5
+      gctx.stroke()
+      gctx.fillStyle = dmg > 0 ? 'rgba(80,10,20,0.3)' : 'rgba(20,10,35,0.4)'
+      gctx.fill()
+      gctx.restore()
+    }
+
+    let asteroidTimer = 0
+    let asteroidInterval = 120
+
+    function gameLoop() {
+      if (state !== 'playing') return
+      raf = requestAnimationFrame(gameLoop)
+
+      // Clear
+      gctx.clearRect(0, 0, W, H)
+
+      // BG stars (game layer)
+      stars2.forEach(s => {
+        s.y += s.sp
+        if (s.y > H) { s.y = 0; s.x = Math.random()*W }
+        gctx.beginPath(); gctx.arc(s.x, s.y, s.r, 0, Math.PI*2)
+        gctx.fillStyle = `rgba(200,195,255,${s.a})`; gctx.fill()
+      })
+
+      // Move ship
+      if ((keys['ArrowLeft'] || keys['a']) && ship.x - ship.w/2 > 0) ship.x -= ship.speed
+      if ((keys['ArrowRight'] || keys['d']) && ship.x + ship.w/2 < W) ship.x += ship.speed
+      if (ship.invincible > 0) ship.invincible--
+
+      // Auto-shoot on spacebar held
+      if (shootCooldown > 0) shootCooldown--
+      if ((keys[' '] || keys['Space']) && shootCooldown === 0) {
+        bullets.push({ x: ship.x, y: ship.y - ship.h/2, vy: -9 })
+        spawnParticles(ship.x, ship.y - ship.h/2, '#c8202e', 3)
+        shootCooldown = 12
+      }
+
+      // Move bullets
+      bullets = bullets.filter(b => b.y > -10)
+      bullets.forEach(b => {
+        b.y += b.vy
+        gctx.beginPath(); gctx.arc(b.x, b.y, 3, 0, Math.PI*2)
+        gctx.fillStyle = '#c8202e'; gctx.fill()
+        gctx.beginPath(); gctx.arc(b.x, b.y+5, 2, 0, Math.PI*2)
+        gctx.fillStyle = 'rgba(200,32,46,0.35)'; gctx.fill()
+      })
+
+      // Spawn asteroids
+      asteroidTimer++
+      asteroidInterval = Math.max(30, 120 - level * 10)
+      if (asteroidTimer >= asteroidInterval) { spawnAsteroid(); asteroidTimer = 0 }
+
+      // Move & draw asteroids
+      asteroids = asteroids.filter(a => a.y < H + a.sz*2)
+      asteroids.forEach(a => {
+        a.x += a.vx; a.y += a.vy; a.rot += a.rotSpd
+        drawAsteroid(a)
+
+        // Bullet collision
+        bullets.forEach((b, bi) => {
+          const dx = b.x - a.x, dy = b.y - a.y
+          if (Math.sqrt(dx*dx+dy*dy) < a.sz) {
+            a.hp--
+            spawnParticles(b.x, b.y, a.hp <= 0 ? '#c8202e' : '#8a8296', a.hp <= 0 ? 12 : 5)
+            bullets.splice(bi, 1)
+            if (a.hp <= 0) {
+              score += Math.floor(a.sz * (level * 0.5 + 1))
+              updateHUD()
+              a.y = 9999 // mark for removal
+            }
+          }
+        })
+
+        // Ship collision
+        if (ship.invincible === 0) {
+          const dx = ship.x - a.x, dy = ship.y - a.y
+          if (Math.sqrt(dx*dx+dy*dy) < a.sz + 12) {
+            lives--
+            ship.invincible = 120
+            spawnParticles(ship.x, ship.y, '#c8202e', 20)
+            updateHUD()
+            if (lives <= 0) { gameover(); return }
+          }
+        }
+      })
+
+      // Particles
+      particles = particles.filter(p => p.life > 0)
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.life -= p.decay
+        gctx.beginPath(); gctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI*2)
+        gctx.fillStyle = p.color; gctx.globalAlpha = p.life; gctx.fill()
+        gctx.globalAlpha = 1
+      })
+
+      // Draw ship (blink when invincible)
+      const showShip = ship.invincible === 0 || Math.floor(ship.invincible / 8) % 2 === 0
+      if (showShip) drawShip(ship.x, ship.y, 1)
+
+      // Level up every 500 pts
+      const newLevel = Math.floor(score / 500) + 1
+      if (newLevel > level) { level = newLevel; updateHUD() }
+
+      // Draw score overlay
+      gctx.font = '400 11px "DM Mono"'
+      gctx.fillStyle = 'rgba(138,130,150,0.35)'
+      gctx.textAlign = 'right'
+      gctx.fillText('SPACE DEFENDER', W - 12, H - 10)
+      gctx.textAlign = 'left'
+    }
+
+    function updateHUD() {
+      document.getElementById('gScore').textContent = score
+      document.getElementById('gLives').textContent = lives
+      document.getElementById('gLevel').textContent  = level
+      if (score > hiScore) { hiScore = score; document.getElementById('gHi').textContent = hiScore }
+    }
+
+    function drawIdleScreen() {
+      gctx.clearRect(0, 0, W, H)
+      stars2.forEach(s => {
+        gctx.beginPath(); gctx.arc(s.x, s.y, s.r, 0, Math.PI*2)
+        gctx.fillStyle = `rgba(200,195,255,${s.a})`; gctx.fill()
+      })
+      drawShip(W/2, H/2 + 20, 0.6)
+      gctx.font = '400 13px "DM Mono"'
+      gctx.fillStyle = 'rgba(180,25,40,0.7)'
+      gctx.textAlign = 'center'
+      gctx.fillText('— SPACE DEFENDER —', W/2, H/2 - 30)
+      gctx.fillStyle = 'rgba(237,232,240,0.35)'
+      gctx.font = '300 10px "DM Mono"'
+      gctx.fillText('Press Start Game to play', W/2, H/2 - 10)
+      gctx.textAlign = 'left'
+    }
+
+    function gameover() {
+      state = 'dead'
+      cancelAnimationFrame(raf)
+      if (score > hiScore) { hiScore = score; document.getElementById('gHi').textContent = hiScore }
+
+      gctx.fillStyle = 'rgba(0,0,0,0.65)'
+      gctx.fillRect(0, 0, W, H)
+      gctx.font = '600 28px "Cinzel"'
+      gctx.fillStyle = 'rgba(200,32,46,0.9)'
+      gctx.textAlign = 'center'
+      gctx.fillText('GAME OVER', W/2, H/2 - 24)
+      gctx.font = '400 12px "DM Mono"'
+      gctx.fillStyle = 'rgba(237,232,240,0.7)'
+      gctx.fillText('Score: ' + score + '   Hi-Score: ' + hiScore, W/2, H/2 + 10)
+      gctx.font = '300 10px "DM Mono"'
+      gctx.fillStyle = 'rgba(138,130,150,0.6)'
+      gctx.fillText('Press Start Game to try again', W/2, H/2 + 38)
+      gctx.textAlign = 'left'
+      document.getElementById('gStartBtn').textContent = 'Try Again'
+    }
+
+    window.gameStart = function() {
+      score = 0; lives = 3; level = 1
+      bullets = []; asteroids = []; particles = []
+      asteroidTimer = 0; shootCooldown = 0
+      ship.x = W/2; ship.y = H - 55; ship.invincible = 0
+      state = 'playing'
+      updateHUD()
+      document.getElementById('gStartBtn').textContent = 'Restart'
+      cancelAnimationFrame(raf)
+      gameLoop()
+    }
+
+    window.gamePause = function() {
+      if (state === 'playing') {
+        state = 'paused'
+        cancelAnimationFrame(raf)
+        gctx.fillStyle = 'rgba(0,0,0,0.55)'
+        gctx.fillRect(0, 0, W, H)
+        gctx.font = '600 22px "Cinzel"'
+        gctx.fillStyle = 'rgba(237,232,240,0.85)'
+        gctx.textAlign = 'center'
+        gctx.fillText('PAUSED', W/2, H/2)
+        gctx.textAlign = 'left'
+      } else if (state === 'paused') {
+        state = 'playing'
+        gameLoop()
+      }
+    }
+
+    // Click to shoot
+    gc.addEventListener('click', () => {
+      if (state === 'playing' && shootCooldown === 0) {
+        bullets.push({ x: ship.x, y: ship.y - ship.h/2, vy: -9 })
+        spawnParticles(ship.x, ship.y - ship.h/2, '#c8202e', 3)
+        shootCooldown = 12
+      }
+    })
+
+    // Keyboard
+    window.addEventListener('keydown', e => {
+      keys[e.key] = true
+      if (e.key === ' ' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        // Only prevent scroll if game canvas is near viewport
+        const rect = gc.getBoundingClientRect()
+        if (rect.top < window.innerHeight && rect.bottom > 0) e.preventDefault()
+      }
+    })
+    window.addEventListener('keyup', e => { keys[e.key] = false })
+
+    // Mobile touch controls — drag to move, tap to shoot
+    let touchStartX = null
+    gc.addEventListener('touchstart', e => {
+      e.preventDefault()
+      touchStartX = e.touches[0].clientX
+      if (state === 'playing' && shootCooldown === 0) {
+        bullets.push({ x: ship.x, y: ship.y - ship.h/2, vy: -9 })
+        spawnParticles(ship.x, ship.y - ship.h/2, '#c8202e', 3)
+        shootCooldown = 12
+      }
+    }, { passive: false })
+    gc.addEventListener('touchmove', e => {
+      e.preventDefault()
+      if (touchStartX === null) return
+      const dx = e.touches[0].clientX - touchStartX
+      const scale = W / gc.clientWidth
+      ship.x = Math.max(ship.w/2, Math.min(W - ship.w/2, ship.x + dx * scale))
+      touchStartX = e.touches[0].clientX
+    }, { passive: false })
+    gc.addEventListener('touchend', () => { touchStartX = null })
+
+    // Draw idle on load
+    drawIdleScreen()
+  })()
 
   /* ── PHOTO FLY AWAY ── */
   let photoFlying = false
